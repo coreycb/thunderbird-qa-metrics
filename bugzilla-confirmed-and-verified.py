@@ -83,15 +83,24 @@ def filter_changed_by_user(bug_ids, user_email, confirmed=False, verified=False)
     return confirmed_bugs, verified_bugs
 
 if __name__ == "__main__":
+    total_commented = 0
+    total_confirmed = 0
+    total_verified = 0
     for username in usernames:
         print(f"🔎 Fetching bugs commented on by {username} since {since}...")
         bugs = search_bugs_commented_on_by_user(username, product=search_products, limit=limit, since=since)
+        total_commented += len(bugs)
         print(f"=== 📝 Bugs commented on by {username}: {len(bugs)} ===")
 
         confirmed_bugs, verified_bugs = filter_changed_by_user(bugs, username, confirmed=True, verified=True)
         print(f"\n=== 📝 Bugs confirmed by {username}: {len(confirmed_bugs)} ===")
+        total_confirmed += len(confirmed_bugs)
         for bug_id in confirmed_bugs:
             print(f"https://bugzilla.mozilla.org/show_bug.cgi?id={bug_id}")
         print(f"\n=== 📝 Bugs verified by {username}: {len(verified_bugs)} ===")
+        total_verified += len(verified_bugs)
         for bug_id in verified_bugs:
             print(f"https://bugzilla.mozilla.org/show_bug.cgi?id={bug_id}")
+    print(f"=== 📝 Total bugs commented on by {usernames}: {total_commented} ===")
+    print(f"=== 📝 Total bugs confirmed by {usernames}: {total_confirmed} ===")
+    print(f"=== 📝 Total bugs verified by {usernames}: {total_verified} ===")
